@@ -180,7 +180,7 @@ class PSM:
             self._T_w_b = self._T_b_w.Inverse()
 
     def run_grasp_logic(self, jaw_angle):
-        if len(self.actuators) == 0:
+        if len(self.actuators) == 0 or self.actuators[0] is None:
             return
         
         if jaw_angle < self.grasp_actuation_jaw_angle:

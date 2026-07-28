@@ -63,6 +63,13 @@ class SimulationManager:
     def __init__(self, name):
         self._client = Client(name)
         self._client.connect()
+        retries = 0
+        # A freshly created ROS2 node's discovery cache can be empty for a moment,
+        # so retry the topic scan until AMBF's objects are actually visible.
+        while self._client.get_common_namespace() == '' and retries < 20:
+            time.sleep(0.5)
+            self._client.refresh()
+            retries += 1
         time.sleep(1.0)
 
     def get_obj_handle(self, name, required: bool= False)->SimulationObject:
