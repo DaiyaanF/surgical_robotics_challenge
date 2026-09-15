@@ -4,26 +4,26 @@
 # Generated on: 2026-05-11 17:47:47
 bodies:
 - BODY BlackGround_Plane
-- BODY block1
-- BODY block2
-- BODY block3
-- BODY block4
-- BODY block5
-- BODY block6
-- BODY peg1
-- BODY peg10
-- BODY peg12
-- BODY peg13
-- BODY peg14
-- BODY peg2
-- BODY peg3
-- BODY peg4
-- BODY peg5
-- BODY peg6
-- BODY peg7
-- BODY peg8
-- BODY peg9
-- BODY peg_board
+# - BODY block1
+# - BODY block2
+# - BODY block3
+# - BODY block4
+# - BODY block5
+# - BODY block6
+# - BODY peg1
+# - BODY peg10
+# - BODY peg12
+# - BODY peg13
+# - BODY peg14
+# - BODY peg2
+# - BODY peg3
+# - BODY peg4
+# - BODY peg5
+# - BODY peg6
+# - BODY peg7
+# - BODY peg8
+# - BODY peg9
+# - BODY peg_board
 ghost objects: []
 soft bodies: []
 joints: []

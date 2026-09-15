@@ -100,7 +100,7 @@ cameraR:
   up: { x: 0.0, y: 1.0, z: 0.0 }
   clipping plane: *cam_common_clipping_plane
   field view angle: *cam_common_fov 
-  monitor: 2
+  monitor: 3
   parent: BODY CameraFrame
   publish image: True
   publish image interval: 5
@@ -110,6 +110,9 @@ cameraR:
   visible: True
   mouse control multipliers: { pan: 0.1, rotate: 1.0, scroll: 0.1, arcball: 0.1 }
   multipass: True
+  stereo: {mode: Passive, eye separation: 0.005, focal length: 2.0}
+  window resolution: { width: 2560, height: 1440 }
+
 
 camera3:
   namespace: cameras/
@@ -124,3 +127,4 @@ camera3:
   # orthographic view width: 6
 # device: Razer Hydra
 
+ros2 param set /ambf_env_stereo_right /ambf/env/stereo/right/stereo_eye_separation

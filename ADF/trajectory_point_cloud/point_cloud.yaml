@@ -1,0 +1,30 @@
+point clouds: [TRAJECTORY]
+namespace: /ambf/env/World/
+
+TRAJECTORY:
+  name: trajectory
+  parent: CameraFrame
+  point size: 0.001
+  color components:
+    ambient:
+      level: 1.0
+    diffuse:
+      b: 0.0
+      g: 0.8
+      r: 0.2
+    specular:
+      b: 0.0
+      g: 0.8
+      r: 0.2
+    shininess: 64
+    transparency: 1.0
+  shaders:
+    path: shaders/
+    vertex: shader.vs
+    geometry: shader.gs
+    fragment: shader.fs
+    geometry data: { # Currently this data is directly are set in the geometry shader
+      input type: points,
+      output type: triangle_strip,
+      max vertices out: 10
+    }
