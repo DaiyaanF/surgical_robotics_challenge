@@ -1,30 +1,61 @@
-point clouds: [TRAJECTORY]
+point clouds: [TRAJECTORY, TARGET_MARKER]
 namespace: /ambf/env/World/
 
 TRAJECTORY:
   name: trajectory
   parent: CameraFrame
-  point size: 0.001
+  point size: 0.002
   color components:
     ambient:
       level: 1.0
     diffuse:
-      b: 0.0
-      g: 0.8
-      r: 0.2
+      b: 0.1
+      g: 0.9
+      r: 0.1
     specular:
-      b: 0.0
-      g: 0.8
-      r: 0.2
-    shininess: 64
+      b: 0.1
+      g: 0.9
+      r: 0.1
+    shininess: 32
     transparency: 1.0
   shaders:
     path: shaders/
     vertex: shader.vs
     geometry: shader.gs
     fragment: shader.fs
-    geometry data: { # Currently this data is directly are set in the geometry shader
+    geometry data: {
       input type: points,
       output type: triangle_strip,
-      max vertices out: 10
+      max vertices out: 4
+    }
+
+# Single-point marker at the current progress index -- the next point on the
+# trajectory the operator should be heading toward. Purely a visual overlay;
+# it tracks progress_idx and does not gate advancement (see bezier_collector.py).
+TARGET_MARKER:
+  name: target_marker
+  parent: CameraFrame
+  point size: 0.003
+  color components:
+    ambient:
+      level: 1.0
+    diffuse:
+      b: 0.1
+      g: 0.1
+      r: 0.9
+    specular:
+      b: 0.1
+      g: 0.1
+      r: 0.9
+    shininess: 32
+    transparency: 1.0
+  shaders:
+    path: shaders/
+    vertex: shader.vs
+    geometry: shader.gs
+    fragment: shader.fs
+    geometry data: {
+      input type: points,
+      output type: triangle_strip,
+      max vertices out: 4
     }

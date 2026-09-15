@@ -8,7 +8,7 @@ attribute vec3 aBitangent;
 
 varying vec4 vPosition;
 varying vec3 vNormal;
-varying vec3 vTexCoord;
+varying vec2 vTexCoord;
 
 
 void main(void)
@@ -23,7 +23,7 @@ void main(void)
    float r = dot(gl_EyePlaneR[1], vPosition);
    float q = dot(gl_EyePlaneQ[1], vPosition);
    gl_TexCoord[1] = vec4(s, t, r, q);
-   vTexCoord = aTexCoord;
+   vTexCoord = aTexCoord.xy;
 
    gl_Position = ftransform();
 }

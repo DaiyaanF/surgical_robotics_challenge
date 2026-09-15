@@ -26,5 +26,5 @@ multibody configs:
   - "ADF/Phantoms/3D_MED_STRAIGHT/ghosts.yaml" #13
   #PEG BOARDS
   - "ADF/Phantoms/Pegboards/pegboard_symmetric_with_wall.yaml" #14
-  - "ADF/Phantoms/Pegboards/pegboard_asymmetric.yaml" #15
+  - "ADF/Phantoms/Pegboards/BlackGround_Plane.yaml" #15
   - "ADF/Phantoms/Pegboards/camera_frame.yaml" #16
