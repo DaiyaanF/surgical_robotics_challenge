@@ -28,3 +28,5 @@ multibody configs:
   - "ADF/Phantoms/Pegboards/pegboard_symmetric_with_wall.yaml" #14
   - "ADF/Phantoms/Pegboards/BlackGround_Plane.yaml" #15
   - "ADF/Phantoms/Pegboards/camera_frame.yaml" #16
+  #TRAJECTORY / TARGET MARKER TRACKER
+  - "ADF/trajectory_point_cloud/point_cloud.yaml" #17
