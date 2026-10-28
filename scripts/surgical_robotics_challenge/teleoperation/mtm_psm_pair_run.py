@@ -54,7 +54,24 @@ from surgical_robotics_challenge.utils.jnt_control_gui import JointGUI
 from surgical_robotics_challenge.utils.utilities import get_boolean_from_opt
 from surgical_robotics_challenge.teleoperation.mtm_teleop_common import apply_mtm_to_psm_command, load_selected_psm_arms
 from threading import Thread
-from std_msgs.msg import Float64MultiArray
+from std_msgs.msg import Float64MultiArray, Float32
+from surgical_robotics_challenge.utils import coordinate_frames
+
+
+_last_printed_scale = None
+
+
+def scale_cb(msg):
+    # Live motion scale from Motion_Scaling_Project's bezier_collector.py
+    # (/ambf/teleop/scale). apply_mtm_to_psm_command() multiplies the MTM twist
+    # by TeleopScale.scale_factor, so updating it here applies the scale.
+    global _last_printed_scale
+    if msg.data <= 0.0:
+        return
+    coordinate_frames.TeleopScale.scale_factor = msg.data
+    if _last_printed_scale is None or abs(msg.data - _last_printed_scale) >= 0.1:
+        print('Motion scale: {:.2f}x'.format(msg.data))
+        _last_printed_scale = msg.data
 
 
 class ControllerInterface:
@@ -187,6 +204,8 @@ if __name__ == "__main__":
     parsed_args.enable_force_feedback = get_boolean_from_opt(parsed_args.enable_force_feedback)
 
     simulation_manager = SimulationManager(parsed_args.client_name)
+    # latch=True so a scale published before this script started still arrives
+    scale_sub = simulation_manager.get_ral().subscriber('/ambf/teleop/scale', Float32, scale_cb, queue_size=1, latch=True)
 
     # tool_id = int(parsed_args.tool_id)
 
@@ -213,8 +232,18 @@ if __name__ == "__main__":
     else:
         leader_l = MTM(simulation_manager.get_ral(), '/MTML/')
         leader_r = MTM(simulation_manager.get_ral(), '/MTMR/')
-        leader_l.set_base_frame(Frame(Rotation.RPY((3.14 - 0.8) / 2, 0, 0), Vector(0, 0, 0)))
-        leader_r.set_base_frame(Frame(Rotation.RPY((3.14 - 0.8) / 2, 0, 0), Vector(0, 0, 0)))
+        # The updated dVRK reports MTM measured_cp/measured_cv in HRSV (the
+        # "base_frame" of each arm in jhu-dVRK/system-MTML-MTMR.json) rather than
+        # each MTM's own base frame. Prepend that transform so the original
+        # base-frame offset below sees the same data it did before the update.
+        R_hrsv_base = Rotation(-1.0, 0.0, 0.0,
+                               0.0, 0.866025404, 0.5,
+                               0.0, 0.5, -0.866025404)
+        T_hrsv_mtml = Frame(R_hrsv_base, Vector(0.180, 0.400, 0.475))
+        T_hrsv_mtmr = Frame(R_hrsv_base, Vector(-0.180, 0.400, 0.475))
+        T_base_offset = Frame(Rotation.RPY((3.14 - 0.8) / 2, 0, 0), Vector(0, 0, 0))
+        leader_l.set_base_frame(T_hrsv_mtml * T_base_offset)
+        leader_r.set_base_frame(T_hrsv_mtmr * T_base_offset)
         controller1 = ControllerInterface(
             simulation_manager.get_ral(),
             leader_l,
