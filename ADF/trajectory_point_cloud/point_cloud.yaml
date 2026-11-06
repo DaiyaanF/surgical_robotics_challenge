@@ -1,4 +1,4 @@
-point clouds: [TRAJECTORY, TARGET_MARKER]
+point clouds: [TRAJECTORY, TRAJECTORY_CUT, TARGET_MARKER, DETECTION_ZONE_ON, DETECTION_ZONE_OFF]
 namespace: /ambf/env/World/
 
 TRAJECTORY:
@@ -16,6 +16,37 @@ TRAJECTORY:
       b: 0.1
       g: 0.9
       r: 0.1
+    shininess: 32
+    transparency: 1.0
+  shaders:
+    path: shaders/
+    vertex: shader.vs
+    geometry: shader.gs
+    fragment: shader.fs
+    geometry data: {
+      input type: points,
+      output type: triangle_strip,
+      max vertices out: 4
+    }
+
+# Part of the trajectory already traced, drawn as an opened incision
+# (bezier_collector.py, disable with --no-incision). Darker than the red
+# target marker so the marker stays visible at the end of the cut.
+TRAJECTORY_CUT:
+  name: trajectory_cut
+  parent: CameraFrame
+  point size: 0.002
+  color components:
+    ambient:
+      level: 1.0
+    diffuse:
+      b: 0.08
+      g: 0.02
+      r: 0.45
+    specular:
+      b: 0.08
+      g: 0.02
+      r: 0.45
     shininess: 32
     transparency: 1.0
   shaders:
@@ -47,6 +78,65 @@ TARGET_MARKER:
       b: 0.1
       g: 0.1
       r: 0.9
+    shininess: 32
+    transparency: 1.0
+  shaders:
+    path: shaders/
+    vertex: shader.vs
+    geometry: shader.gs
+    fragment: shader.fs
+    geometry data: {
+      input type: points,
+      output type: triangle_strip,
+      max vertices out: 4
+    }
+
+# Ring around the tool tip showing its detection zone (bezier_collector.py
+# --show-detection). Cyan while the path / start dot is inside the zone...
+DETECTION_ZONE_ON:
+  name: detection_zone_on
+  parent: CameraFrame
+  point size: 0.002
+  color components:
+    ambient:
+      level: 1.0
+    diffuse:
+      b: 1.0
+      g: 0.8
+      r: 0.1
+    specular:
+      b: 1.0
+      g: 0.8
+      r: 0.1
+    shininess: 32
+    transparency: 1.0
+  shaders:
+    path: shaders/
+    vertex: shader.vs
+    geometry: shader.gs
+    fragment: shader.fs
+    geometry data: {
+      input type: points,
+      output type: triangle_strip,
+      max vertices out: 4
+    }
+
+# ...amber while it isn't. Only one of the two is on screen at a time.
+DETECTION_ZONE_OFF:
+  name: detection_zone_off
+  parent: CameraFrame
+  point size: 0.002
+  color components:
+    ambient:
+      level: 1.0
+    diffuse:
+      b: 0.1
+      g: 0.6
+      r: 1.0
+    specular:
+      b: 0.1
+      g: 0.6
+      r: 1.0
     shininess: 32
     transparency: 1.0
   shaders:
